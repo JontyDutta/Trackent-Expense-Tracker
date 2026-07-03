@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useSettingsStore } from '../store/useSettingsStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { useExpenseStore } from '../store/useExpenseStore';
 import { CURRENCIES } from '../constants';
-import { Moon, Sun, Info, ShieldAlert, Trash2 } from 'lucide-react';
+import { Moon, Sun, Info, ShieldAlert, Trash2, LogOut, User } from 'lucide-react';
 
 export default function Settings() {
   const { theme, toggleTheme, currency, setCurrency } = useSettingsStore();
   const { monthlyBudget, setMonthlyBudget, expenses, categories, clearAllExpenses } = useExpenseStore();
+  const { user, signOut } = useAuthStore();
   
   const [budgetInput, setBudgetInput] = useState(monthlyBudget || '');
   const [showAbout, setShowAbout] = useState(false);
@@ -22,6 +24,26 @@ export default function Settings() {
     <div className="p-4 md:p-8 max-w-2xl mx-auto space-y-6">
       <h1 className="text-2xl font-semibold tracking-tight mb-6">Settings</h1>
       
+      {/* Account Profile (Visible mainly for mobile users who lack the sidebar) */}
+      <div className="bg-card rounded-2xl shadow-sm border border-border p-6 md:px-8 mb-6 md:hidden">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <User size={24} />
+          </div>
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Signed in as</p>
+            <p className="font-bold text-foreground truncate">{user?.email}</p>
+          </div>
+        </div>
+        <button 
+          onClick={signOut}
+          className="w-full flex items-center justify-center gap-2 bg-secondary text-foreground hover:bg-red-500/10 hover:text-red-500 py-2.5 rounded-xl font-medium transition-colors text-sm"
+        >
+          <LogOut size={16} strokeWidth={1.5} />
+          Sign Out
+        </button>
+      </div>
+
       {/* General Settings */}
       <div className="bg-card rounded-2xl shadow-sm border border-border flex flex-col">
         
