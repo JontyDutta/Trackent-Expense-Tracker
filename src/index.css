@@ -1,0 +1,39 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --primary: #4f46e5;
+    --secondary: #f1f5f9;
+    --accent: #10b981;
+    --card: #ffffff;
+    --border: #e2e8f0;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --primary: #6366f1;
+    --secondary: #1e293b;
+    --accent: #34d399;
+    --card: #1e293b;
+    --border: #334155;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[var(--border)];
+  }
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300 tracking-tight;
+    font-family: 'Outfit', sans-serif;
+  }
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
