@@ -50,7 +50,7 @@ export default function App() {
           <h2 className="font-semibold mb-2">How to fix this:</h2>
           <ol className="list-decimal pl-5 space-y-2">
             <li>Go to your GitHub Repository Settings</li>
-            <li>Click <b>Secrets and variables</b> -> <b>Actions</b> in the left sidebar</li>
+            <li>Click <b>Secrets and variables</b> &gt; <b>Actions</b> in the left sidebar</li>
             <li>Click <b>New repository secret</b></li>
             <li>Add <code>VITE_SUPABASE_URL</code> with your Supabase project URL</li>
             <li>Add <code>VITE_SUPABASE_ANON_KEY</code> with your Supabase anon key</li>
