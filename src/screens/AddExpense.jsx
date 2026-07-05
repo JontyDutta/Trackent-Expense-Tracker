@@ -36,10 +36,14 @@ export default function AddExpense() {
     e.preventDefault();
     if (!newCatName) return;
     
+    // Pick a random nice color
+    const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f43f5e'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    
     addCategory({
       name: newCatName,
       icon: newCatIcon,
-      color: newCatColor,
+      color: randomColor,
     });
     
     setIsAddingCategory(false);
@@ -100,12 +104,6 @@ export default function AddExpense() {
                   onChange={(e) => setNewCatName(e.target.value)} 
                   className="flex-1 min-w-0 bg-card border border-border rounded-md p-2 text-sm text-foreground focus:outline-none focus:border-gray-400"
                   placeholder="Name"
-                />
-                <input 
-                  type="color" 
-                  value={newCatColor} 
-                  onChange={(e) => setNewCatColor(e.target.value)} 
-                  className="w-10 h-10 p-0.5 bg-card border border-border rounded-md cursor-pointer flex-shrink-0"
                 />
               </div>
               <button 
