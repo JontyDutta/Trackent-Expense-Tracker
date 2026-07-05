@@ -134,15 +134,17 @@ export default function AddExpense() {
                   <span className="text-2xl mb-1">{cat.icon}</span>
                   <span className="text-[10px] font-medium text-center truncate w-full">{cat.name}</span>
                 </button>
-                {/* Delete button (only show on custom categories if we want, or all categories) */}
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); if(categoryId === cat.id) setCategoryId(''); }}
-                  className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm"
-                  title="Delete category"
-                >
-                  <X size={12} strokeWidth={2.5} />
-                </button>
+                {/* Delete button (only show on custom categories) */}
+                {(cat.id.includes('-') || cat.id.startsWith('cat_custom_')) && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); removeCategory(cat.id); if(categoryId === cat.id) setCategoryId(''); }}
+                    className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm"
+                    title="Delete category"
+                  >
+                    <X size={12} strokeWidth={2.5} />
+                  </button>
+                )}
               </div>
             ))}
           </div>
