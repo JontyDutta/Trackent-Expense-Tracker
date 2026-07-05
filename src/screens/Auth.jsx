@@ -25,12 +25,16 @@ export default function Auth() {
           password,
         });
         if (error) throw error;
+        setEmail('');
+        setPassword('');
       } else {
         const { error } = await supabase.auth.signUp({
           email,
           password,
         });
         if (error) throw error;
+        setEmail('');
+        setPassword('');
         alert("Check your email for the confirmation link!");
       }
     } catch (error) {
@@ -68,17 +72,19 @@ export default function Auth() {
         </p>
 
         {/* Auth Form */}
-        <form onSubmit={handleAuth} className="w-full space-y-4 mb-6">
+        <form onSubmit={handleAuth} className="w-full space-y-4 mb-6" autoComplete="off">
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
               <Mail size={20} />
             </span>
             <input
               type="email"
+              name="email"
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-[#161a2b] border border-gray-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white rounded-xl py-4 pl-12 pr-4 outline-none transition-all placeholder:text-gray-600"
+              autoComplete="off"
               required
             />
           </div>
@@ -89,10 +95,12 @@ export default function Auth() {
             </span>
             <input
               type="password"
+              name="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-[#161a2b] border border-gray-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white rounded-xl py-4 pl-12 pr-4 outline-none transition-all placeholder:text-gray-600"
+              autoComplete="new-password"
               required
             />
           </div>
