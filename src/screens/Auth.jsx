@@ -35,7 +35,6 @@ export default function Auth() {
         if (error) throw error;
         setEmail('');
         setPassword('');
-        alert("Check your email for the confirmation link!");
       }
     } catch (error) {
       console.error("Auth error:", error.message);
