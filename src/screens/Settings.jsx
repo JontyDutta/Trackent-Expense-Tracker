@@ -50,7 +50,7 @@ export default function Settings() {
         {/* Theme Toggle was moved to header */}
 
         {/* Currency Selector */}
-        <div className="p-6 md:px-8 flex items-center justify-between border-b border-border/50">
+        <div className="p-6 md:px-8 flex flex-col sm:flex-row sm:items-center justify-between border-b border-border/50 gap-4">
           <div>
             <h3 className="font-medium text-foreground">Currency</h3>
             <p className="text-sm text-gray-500 mt-1">Select default currency.</p>
@@ -58,7 +58,7 @@ export default function Settings() {
           <select 
             value={currency.code} 
             onChange={(e) => setCurrency(e.target.value)}
-            className="bg-secondary/50 text-foreground rounded-lg py-2 px-3 border border-border outline-none focus:border-foreground transition-colors text-sm"
+            className="w-full sm:w-auto max-w-full bg-secondary/50 text-foreground rounded-lg py-2 px-3 border border-border outline-none focus:border-foreground transition-colors text-sm truncate"
           >
             {CURRENCIES.map(c => (
               <option key={c.code} value={c.code}>

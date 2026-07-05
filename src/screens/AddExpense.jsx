@@ -86,26 +86,26 @@ export default function AddExpense() {
           
           {isAddingCategory ? (
             <div className="bg-secondary/30 p-4 rounded-xl border border-border mb-4 flex flex-col gap-3">
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full">
                 <input 
                   type="text" 
                   value={newCatIcon} 
                   onChange={(e) => setNewCatIcon(e.target.value)} 
-                  className="w-12 bg-card border border-border rounded-md p-2 text-center text-lg focus:outline-none focus:border-gray-400"
+                  className="w-10 sm:w-12 bg-card border border-border rounded-md p-2 text-center text-lg focus:outline-none focus:border-gray-400 flex-shrink-0"
                   maxLength={2}
                 />
                 <input 
                   type="text" 
                   value={newCatName} 
                   onChange={(e) => setNewCatName(e.target.value)} 
-                  className="flex-1 bg-card border border-border rounded-md p-2 text-sm text-foreground focus:outline-none focus:border-gray-400"
+                  className="flex-1 min-w-0 bg-card border border-border rounded-md p-2 text-sm text-foreground focus:outline-none focus:border-gray-400"
                   placeholder="Name"
                 />
                 <input 
                   type="color" 
                   value={newCatColor} 
                   onChange={(e) => setNewCatColor(e.target.value)} 
-                  className="w-10 h-10 p-0.5 bg-card border border-border rounded-md cursor-pointer"
+                  className="w-10 h-10 p-0.5 bg-card border border-border rounded-md cursor-pointer flex-shrink-0"
                 />
               </div>
               <button 
