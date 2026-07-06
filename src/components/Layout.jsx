@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
 import { useSettingsStore } from '../store/useSettingsStore';
 
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Wallet } from 'lucide-react';
 
 export default function Layout() {
   const { theme, toggleTheme } = useSettingsStore();
@@ -36,8 +36,9 @@ export default function Layout() {
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header / Theme Toggle Container */}
-        <header className="flex items-center justify-between p-4 md:px-8 border-b border-border bg-card/50 backdrop-blur-sm z-10 pt-safe shrink-0">
+        <header className="flex items-center justify-between p-4 md:px-8 border-b border-border bg-card z-10 pt-safe shrink-0 shadow-sm">
           <div className="flex items-center gap-2 md:hidden">
+            <Wallet size={24} className="text-primary" strokeWidth={1.5} />
             <h2 className="font-bold text-xl text-primary">Trackent</h2>
           </div>
           <div className="hidden md:block"></div> {/* Spacer for desktop */}

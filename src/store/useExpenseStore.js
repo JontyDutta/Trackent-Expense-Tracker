@@ -1,9 +1,12 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { supabase } from '../lib/supabase';
 import { DEFAULT_CATEGORIES } from '../constants';
 import { useAuthStore } from './useAuthStore';
 
-export const useExpenseStore = create((set, get) => ({
+export const useExpenseStore = create(
+  persist(
+    (set, get) => ({
   expenses: [],
   categories: [...DEFAULT_CATEGORIES],
   monthlyBudget: 0,
@@ -103,6 +106,27 @@ export const useExpenseStore = create((set, get) => ({
     }
   },
 
+  updateExpense: async (id, updatedData) => {
+    const previousExpenses = get().expenses;
+    set((state) => ({
+      expenses: state.expenses.map(e => e.id === id ? { ...e, ...updatedData } : e)
+    }));
+
+    try {
+      const dbExpense = {};
+      if (updatedData.amount !== undefined) dbExpense.amount = updatedData.amount;
+      if (updatedData.categoryId !== undefined) dbExpense.category = updatedData.categoryId;
+      if (updatedData.note !== undefined) dbExpense.note = updatedData.note;
+
+      const { error } = await supabase.from('expenses').update(dbExpense).eq('id', id);
+      if (error) throw error;
+    } catch (error) {
+      console.error("Error updating expense:", error);
+      alert("Database error: " + (error.message || JSON.stringify(error)));
+      set({ expenses: previousExpenses });
+    }
+  },
+
   clearAllExpenses: async () => {
     const user = useAuthStore.getState().user;
     if (!user) return;
@@ -175,4 +199,13 @@ export const useExpenseStore = create((set, get) => ({
   setCategoryBudget: (categoryId, amount) => set((state) => ({
     categoryBudgets: { ...state.categoryBudgets, [categoryId]: amount }
   })),
-}));
+    }),
+    {
+      name: 'trackent-expense-storage',
+      partialize: (state) => ({ 
+        monthlyBudget: state.monthlyBudget,
+        categoryBudgets: state.categoryBudgets 
+      }),
+    }
+  )
+);

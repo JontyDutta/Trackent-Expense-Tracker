@@ -117,7 +117,7 @@ export default function Groups() {
                           removeGroup(g.id);
                         }
                       }}
-                      className="text-gray-300 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      className="text-gray-400 hover:text-red-500 transition-all"
                       title="Delete Group"
                     >
                       <Trash2 strokeWidth={1.5} size={18} />
@@ -235,7 +235,7 @@ export default function Groups() {
                          <span className="font-medium text-foreground">{currency.symbol}{exp.amount.toFixed(2)}</span>
                          <button 
                           onClick={() => { if(window.confirm('Delete this expense?')) removeGroupExpense(exp.id); }}
-                          className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-colors focus:opacity-100"
+                          className="text-gray-400 hover:text-red-500 transition-colors"
                          >
                            <Trash2 strokeWidth={1.5} size={16} />
                          </button>
@@ -271,7 +271,7 @@ export default function Groups() {
                                   removeGroupMember(selectedGroupId, member.id);
                                 }
                               }}
-                              className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-colors focus:opacity-100"
+                              className="text-gray-400 hover:text-red-500 transition-colors"
                               title="Remove Member"
                             >
                               <Trash2 size={14} strokeWidth={1.5} />

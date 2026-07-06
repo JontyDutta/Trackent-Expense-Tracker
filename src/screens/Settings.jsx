@@ -12,10 +12,13 @@ export default function Settings() {
   
   const [budgetInput, setBudgetInput] = useState(monthlyBudget || '');
   const [showAbout, setShowAbout] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const handleSaveBudget = (e) => {
     e.preventDefault();
     setMonthlyBudget(parseFloat(budgetInput) || 0);
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
   };
 
 
@@ -85,7 +88,9 @@ export default function Settings() {
                 placeholder="No budget set"
               />
             </div>
-            <button type="submit" className="bg-primary text-white px-6 py-2.5 rounded-xl font-bold">Save</button>
+            <button type="submit" className={`px-6 py-2.5 rounded-xl font-bold transition-colors text-white min-w-[100px] flex items-center justify-center ${isSaved ? 'bg-green-500' : 'bg-primary'}`}>
+              {isSaved ? "Saved!" : "Save"}
+            </button>
           </form>
         </div>
 

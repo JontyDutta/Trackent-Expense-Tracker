@@ -3,14 +3,37 @@ import { Link } from 'react-router-dom';
 import { useExpenseStore } from '../store/useExpenseStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { format, parseISO, isSameMonth, startOfMonth, subMonths, addMonths } from 'date-fns';
-import { ChevronLeft, ChevronRight, PieChart as PieChartIcon, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PieChart as PieChartIcon, Trash2, Pencil } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
 
 export default function Dashboard() {
-  const { expenses, categories, monthlyBudget, removeExpense, clearAllExpenses } = useExpenseStore();
+  const { expenses, categories, monthlyBudget, removeExpense, updateExpense, clearAllExpenses } = useExpenseStore();
   const { currency } = useSettingsStore();
   
   const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
+  
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [editAmount, setEditAmount] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editNote, setEditNote] = useState('');
+
+  const handleEditClick = (expense) => {
+    setEditingExpense(expense);
+    setEditAmount(expense.amount);
+    setEditCategory(expense.categoryId);
+    setEditNote(expense.note || '');
+  };
+
+  const handleSaveEdit = (e) => {
+    e.preventDefault();
+    if (!editingExpense) return;
+    updateExpense(editingExpense.id, {
+      amount: parseFloat(editAmount) || 0,
+      categoryId: editCategory,
+      note: editNote
+    });
+    setEditingExpense(null);
+  };
 
   // Filter expenses for current viewed month
   const monthlyExpenses = useMemo(() => {
@@ -223,17 +246,26 @@ export default function Dashboard() {
                           <span className="font-medium text-foreground">
                             {currency.symbol}{expense.amount.toFixed(2)}
                           </span>
-                          <button 
-                            onClick={() => {
-                              if (window.confirm('Delete this expense?')) {
-                                removeExpense(expense.id);
-                              }
-                            }}
-                            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100"
-                            title="Delete"
-                          >
-                            <Trash2 size={16} strokeWidth={1.5} />
-                          </button>
+                          <div className="flex items-center gap-3">
+                            <button 
+                              onClick={() => handleEditClick(expense)}
+                              className="text-gray-400 hover:text-blue-500 transition-all focus:opacity-100"
+                              title="Edit"
+                            >
+                              <Pencil size={16} strokeWidth={1.5} />
+                            </button>
+                            <button 
+                              onClick={() => {
+                                if (window.confirm('Delete this expense?')) {
+                                  removeExpense(expense.id);
+                                }
+                              }}
+                              className="text-gray-400 hover:text-red-500 transition-all focus:opacity-100"
+                              title="Delete"
+                            >
+                              <Trash2 size={16} strokeWidth={1.5} />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
@@ -244,6 +276,59 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* Edit Modal */}
+      {editingExpense && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card w-full max-w-sm rounded-2xl p-6 md:p-8 shadow-2xl relative border border-border">
+            <h2 className="text-xl font-semibold mb-6">Edit Expense</h2>
+            <form onSubmit={handleSaveEdit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">Amount</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">{currency.symbol}</span>
+                  <input 
+                    type="number" step="0.01" required
+                    value={editAmount} onChange={(e) => setEditAmount(e.target.value)}
+                    className="w-full pl-8 pr-4 py-2.5 bg-transparent border border-border rounded-xl focus:outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">Category</label>
+                <select 
+                  required
+                  value={editCategory} onChange={(e) => setEditCategory(e.target.value)}
+                  className="w-full bg-transparent border border-border py-2.5 px-3 rounded-xl focus:outline-none focus:border-primary text-foreground"
+                >
+                  <option value="" disabled className="bg-background text-foreground">Select category...</option>
+                  {categories.map(c => (
+                    <option key={c.id} value={c.id} className="bg-background text-foreground">
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">Note (Optional)</label>
+                <input 
+                  type="text"
+                  value={editNote} onChange={(e) => setEditNote(e.target.value)}
+                  className="w-full bg-transparent border border-border py-2.5 px-3 rounded-xl focus:outline-none focus:border-primary transition-colors placeholder:text-gray-300 dark:placeholder:text-gray-700"
+                  placeholder="What was this for?"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button type="button" onClick={() => setEditingExpense(null)} className="flex-1 bg-secondary text-foreground py-2.5 rounded-xl font-bold">Cancel</button>
+                <button type="submit" className="flex-1 bg-primary text-white py-2.5 rounded-xl font-bold">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );
