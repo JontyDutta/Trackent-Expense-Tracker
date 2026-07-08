@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Key, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, Key, Eye, EyeOff, UserCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from '../store/useAuthStore';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -124,9 +125,27 @@ export default function Auth() {
         {/* Toggle Login/Signup */}
         <button
           onClick={() => setIsLogin(!isLogin)}
-          className="text-gray-400 text-sm hover:text-white transition-colors mb-8"
+          className="text-gray-400 text-sm hover:text-white transition-colors mb-4"
         >
           {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
+        </button>
+
+        {/* Guest Mode */}
+        <div className="w-full flex items-center justify-center gap-4 mb-4">
+          <div className="h-[1px] bg-gray-800 flex-1"></div>
+          <span className="text-gray-500 text-sm">OR</span>
+          <div className="h-[1px] bg-gray-800 flex-1"></div>
+        </div>
+
+        <button
+          onClick={() => {
+            const { signInAsGuest } = useAuthStore.getState();
+            signInAsGuest();
+          }}
+          className="w-full bg-[#161a2b] border border-gray-700 text-gray-300 font-medium py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-[#1f243a] hover:text-white transition-colors shadow-sm"
+        >
+          <UserCircle size={20} />
+          Try as Guest
         </button>
 
       </div>

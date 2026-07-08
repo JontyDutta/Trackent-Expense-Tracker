@@ -18,6 +18,10 @@ export const useExpenseStore = create(
     try {
       const user = useAuthStore.getState().user;
       if (!user) return;
+      if (user.id === 'guest') {
+        set({ loading: false });
+        return; // Don't fetch from DB for guest
+      }
 
       const [expensesRes, categoriesRes] = await Promise.all([
         supabase.from('expenses').select('*').order('date', { ascending: false }),
@@ -58,6 +62,8 @@ export const useExpenseStore = create(
       expenses: [optimisticExpense, ...state.expenses]
     }));
 
+    if (user.id === 'guest') return;
+
     try {
       const dbExpense = {
         amount: expense.amount,
@@ -96,6 +102,9 @@ export const useExpenseStore = create(
       expenses: state.expenses.filter(e => e.id !== id)
     }));
 
+    const user = useAuthStore.getState().user;
+    if (user?.id === 'guest') return;
+
     try {
       const { error } = await supabase.from('expenses').delete().eq('id', id);
       if (error) throw error;
@@ -111,6 +120,9 @@ export const useExpenseStore = create(
     set((state) => ({
       expenses: state.expenses.map(e => e.id === id ? { ...e, ...updatedData } : e)
     }));
+
+    const user = useAuthStore.getState().user;
+    if (user?.id === 'guest') return;
 
     try {
       const dbExpense = {};
@@ -134,6 +146,8 @@ export const useExpenseStore = create(
     const previousExpenses = get().expenses;
     set({ expenses: [] });
 
+    if (user.id === 'guest') return;
+
     try {
       const { error } = await supabase.from('expenses').delete().eq('user_id', user.id);
       if (error) throw error;
@@ -154,6 +168,8 @@ export const useExpenseStore = create(
     set((state) => ({
       categories: [...state.categories, optimisticCat]
     }));
+
+    if (user.id === 'guest') return;
 
     try {
       const { data, error } = await supabase.from('categories').insert({
@@ -185,6 +201,9 @@ export const useExpenseStore = create(
       categories: state.categories.filter(c => c.id !== id)
     }));
 
+    const user = useAuthStore.getState().user;
+    if (user?.id === 'guest') return;
+
     try {
       const { error } = await supabase.from('categories').delete().eq('id', id);
       if (error) throw error;
@@ -204,7 +223,9 @@ export const useExpenseStore = create(
       name: 'trackent-expense-storage',
       partialize: (state) => ({ 
         monthlyBudget: state.monthlyBudget,
-        categoryBudgets: state.categoryBudgets 
+        categoryBudgets: state.categoryBudgets,
+        expenses: state.expenses,
+        categories: state.categories
       }),
     }
   )
